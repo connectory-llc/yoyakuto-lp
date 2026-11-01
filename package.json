@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "astro": "^7.3.8",
-    "satori": "^0.47.1",
+    "satori": "^0.63.2",
     "sharp": "^0.35.5"
   },
   "devDependencies": {
