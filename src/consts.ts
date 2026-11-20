@@ -1,6 +1,6 @@
 export const SITE_NAME = 'Yoyakuto';
 export const SITE_NAME_KANA = 'ヨヤクト';
-export const SITE_TITLE = 'Yoyakuto - スタッフ指名の予約受付サービス';
+export const SITE_TITLE = 'Yoyakuto - 担当を指名して予約できる予約受付サービス';
 export const SITE_DESCRIPTION =
   'Yoyakuto は、スタッフごとに予約ページを用意し、指名の予約を店でまとめて受け付けられる予約サービスです。Google カレンダーと連携し、スタッフの予定が空いている時間だけを予約枠にします。';
 export const APP_URL = 'https://yoyakuto.com';

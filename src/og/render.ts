@@ -7,12 +7,12 @@ import { OG_IMAGE_HEIGHT, OG_IMAGE_WIDTH } from '../consts';
 
 const FONT_NAME = 'IBM Plex Sans JP';
 const FONT_WEIGHT = 700;
-const COLOR_BACKGROUND = '#F7F8FA';
-const COLOR_GRID = '#ECEFF5';
-const COLOR_TEXT = '#141B2D';
-const COLOR_SUB = '#566176';
-const COLOR_FREE = '#22774E';
-const COLOR_FREE_SOFT = '#E5F6ED';
+const COLOR_BACKGROUND = '#F4F8FD';
+const COLOR_GRID = '#E9F0F8';
+const COLOR_TEXT = '#1E2733';
+const COLOR_SUB = '#5E6873';
+const COLOR_FREE = '#56688F';
+const COLOR_FREE_SOFT = '#E6F0FA';
 const COLOR_SURFACE = '#FFFFFF';
 const GRID_ROW = 48;
 const GRID_COLUMN = 96;

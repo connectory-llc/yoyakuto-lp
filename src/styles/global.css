@@ -1,30 +1,32 @@
 :root {
-  --color-bg: #f7f8fa;
+  --color-bg: #f4f8fd;
   --color-surface: #ffffff;
-  --color-text: #141b2d;
-  --color-text-sub: #566176;
-  --color-border: #e1e6ee;
-  --color-grid: #eceff5;
-  --color-free: #22774e;
-  --color-free-hover: #185939;
-  --color-free-soft: #e5f6ed;
-  --color-busy: #dfe4ec;
+  --color-sky: #e6f0fa;
+  --color-text: #1e2733;
+  --color-text-sub: #5e6873;
+  --color-border: #dce6f0;
+  --color-free: #56688f;
+  --color-free-hover: #45557a;
+  --color-free-soft: #e6f0fa;
+  --color-busy: #e4eaf2;
   --color-ink: #141b2d;
   --color-ink-hover: #232c42;
   --color-ink-sub: #aab4c5;
   --color-ink-line: #2b354d;
   --color-on-ink: #f7f8fa;
-  --color-free-on-ink: #4cc38a;
-  --color-free-on-ink-soft: rgb(76 195 138 / 0.14);
-  --shadow-color: rgb(20 27 45 / 0.35);
+  --color-free-on-ink: #bfd8f2;
+  --color-free-on-ink-soft: rgb(191 216 242 / 0.14);
+  --shadow-color: rgb(86 104 143 / 0.35);
   --color-member-1: #5b6fd0;
   --color-member-2: #d9822b;
   --color-member-3: #c0507f;
-  --font-sans: 'IBM Plex Sans JP', 'Hiragino Sans', sans-serif;
+  --font-sans: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --font-serif: 'Shippori Mincho B1', 'Hiragino Mincho ProN', serif;
+  --font-accent: 'Cormorant Garamond', 'Times New Roman', serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
   --radius: 10px;
   --content-width: 1080px;
-  --header-height: 68px;
+  --header-height: 72px;
 }
 
 *,
@@ -51,7 +53,7 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans);
   line-height: 1.8;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   -webkit-font-smoothing: antialiased;
 }
 

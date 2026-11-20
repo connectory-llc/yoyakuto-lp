@@ -29,59 +29,46 @@ const { id, time, eyebrow, title, lead, tone = 'default' } = Astro.props;
   .label {
     margin: 0;
     display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    letter-spacing: 0.08em;
+    align-items: baseline;
+    gap: 14px;
     color: var(--color-text-sub);
   }
   .time {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 2px 10px;
-    border-radius: 999px;
-    background: var(--color-free-soft);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1;
     color: var(--color-free);
-    font-weight: 500;
-  }
-  .time::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
   }
   .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
   }
   h2 {
     margin: 0;
-    font-weight: 700;
-    font-size: 34px;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 36px;
     line-height: 1.5;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
   }
   .lead {
     margin: 0;
     font-size: 15px;
-    line-height: 2;
+    line-height: 2.1;
     color: var(--color-text-sub);
   }
-  .ink .label {
-    color: var(--color-ink-sub);
-  }
-  .ink .time {
-    background: var(--color-free-on-ink-soft);
-    color: var(--color-free-on-ink);
-  }
+  .ink .label,
   .ink .lead {
     color: var(--color-ink-sub);
   }
+  .ink .time {
+    color: var(--color-free-on-ink);
+  }
   @media (max-width: 760px) {
     h2 {
-      font-size: 26px;
+      font-size: 27px;
     }
     .lead {
       font-size: 14px;
