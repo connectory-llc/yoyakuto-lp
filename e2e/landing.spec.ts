@@ -44,7 +44,7 @@ test.describe('トップページ', () => {
     await expect(phrases).toHaveText(['その予約', 'まだ DM で受けていますか']);
   });
 
-  test('機能・使い方・料金・よくある質問の各セクションが表示される', async ({ page }) => {
+  test('DM との違い・店の予約一覧・機能・使い方・料金・よくある質問の各セクションが表示される', async ({ page }) => {
     for (const heading of SECTION_HEADINGS) {
       await expect(page.getByRole('heading', { level: 2, name: heading, exact: true })).toBeVisible();
     }

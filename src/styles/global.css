@@ -20,10 +20,9 @@
   --font-sans: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
   --font-serif: 'Shippori Mincho B1', 'Hiragino Mincho ProN', serif;
   --font-accent: 'Cormorant Garamond', 'Times New Roman', serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --radius: 10px;
   --content-width: 1080px;
   --header-height: 72px;
+  --anchor-offset: 64px;
 }
 
 *,
@@ -34,7 +33,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: var(--header-height);
+  scroll-padding-top: calc(var(--header-height) + var(--anchor-offset));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -55,11 +54,11 @@ body {
 }
 
 a {
-  color: var(--color-free);
+  color: var(--color-accent);
 }
 
 a:hover {
-  color: var(--color-free-hover);
+  color: var(--color-text-sub);
 }
 
 :where(h1, h2, h3, p, li, figcaption) {
