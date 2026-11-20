@@ -55,8 +55,8 @@ test.describe('トップページ', () => {
   });
 
   test('よくある質問は質問を押すと回答が開き、もう一度押すと閉じる', async ({ page }) => {
-    const question = page.getByText('予約する側もアカウントが必要ですか？');
-    const answer = page.getByText('予約を確定するときに、Google アカウントでのログインをお願いしています。', { exact: false });
+    const question = page.getByText('お客様もアカウントが必要ですか？');
+    const answer = page.getByText('お客様は名前とメールアドレスを入れ、届いたメールのリンクを開くと予約が確定します。', { exact: false });
 
     await expect(answer).toBeHidden();
     await question.click();
