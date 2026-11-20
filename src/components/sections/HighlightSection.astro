@@ -1,34 +1,55 @@
 ---
+import { freeSlotsOf, NOMINATED, pageName, SAMPLE_DATE_LABEL, slotLabel } from '../../sampleSchedule';
 import SectionHeading from '../SectionHeading.astro';
 
-const BEFORE = [
-  '候補日を 3 つ挙げてメールを送る',
-  '相手の返事を待つ',
-  '社内のメンバーの予定を確かめ直す',
-  '埋まっていたら、候補日の出し直し',
+// 見本の DM。from が customer ならお客様、staff ならスタッフの発言
+const MESSAGES = [
+  { from: 'customer', text: '来週の土曜の午後って空いてますか？', meta: 'お客様　23:48' },
+  { from: 'staff', text: '15 時なら空いてます', meta: 'スタッフ　翌日 12:10' },
+  { from: 'customer', text: '15 時は難しくて… 16 時以降はどうですか？', meta: 'お客様　12:52' },
+  { from: 'staff', text: '16 時は埋まってしまっていて…', meta: 'スタッフ　18:30' },
 ];
-const AFTER = ['予約ページの URL を送る', '相手が空いている枠を選ぶ', 'Google カレンダーに予定が入る'];
+const FREE_SLOTS = freeSlotsOf(NOMINATED);
+// DM の見本でお客様が「16 時以降」を希望しているので、16:00 以降で最初に空いている枠を選んだことにする
+const DESIRED_FROM_SLOT = 12;
+const PICKED_SLOT = FREE_SLOTS.find((slot) => slot >= DESIRED_FROM_SLOT);
+const AFTER = ['お客様が指名したいスタッフの予約ページを開く', '空いている枠を選んで予約する', '予約が店の管理画面とカレンダーに入る'];
 ---
 <section class="highlight">
   <div class="inner">
     <SectionHeading
-      id="why"
-      time="10:30"
-      eyebrow="Why Yoyakuto"
-      title="日程調整の往復を、URL ひとつに。"
-      lead="候補日を出して、返事を待って、全員の予定を確かめ直す。その手順を予約ページに任せられます。"
-      tone="ink"
+      id="before-after"
+      time="10:00"
+      eyebrow="Before / After"
+      title="予約の受付を DM から外す"
+      lead="DM に返信して、空いている日時を伝えて、決まった予約を店に知らせる。その手順を予約ページに任せられます。"
     />
     <div class="compare">
       <div class="column before">
-        <p class="column-title">これまで</p>
-        <ol>
-          {BEFORE.map((step) => <li>{step}</li>)}
-        </ol>
+        <p class="column-title">これまで　スタッフの DM で受ける</p>
+        <ul class="thread">
+          {MESSAGES.map((message) => (
+            <li class:list={['message', message.from]}>
+              <span class="bubble">{message.text}</span>
+              <span class="meta">{message.meta}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="note">日時が決まるまで、施術の合間にやり取りが続く。決まった予約を、店はまだ知らない。</p>
       </div>
       <div class="column after">
-        <p class="column-title">Yoyakuto なら</p>
-        <ol>
+        <p class="column-title">Yoyakuto なら　スタッフの予約ページで受ける</p>
+        <div class="page" aria-hidden="true">
+          <p class="page-head">
+            <span class="avatar">{NOMINATED.initial}</span>
+            <span class="page-name">{pageName(NOMINATED)}</span>
+            <span class="page-date" lang="en">{SAMPLE_DATE_LABEL}</span>
+          </p>
+          <ul class="slots">
+            {FREE_SLOTS.map((slot) => <li class:list={{ picked: slot === PICKED_SLOT }}>{slotLabel(slot)}</li>)}
+          </ul>
+        </div>
+        <ol class="steps">
           {AFTER.map((step) => <li>{step}</li>)}
         </ol>
       </div>
@@ -39,8 +60,6 @@ const AFTER = ['予約ページの URL を送る', '相手が空いている枠�
 <style>
   .highlight {
     padding: 112px 32px;
-    background: var(--color-ink);
-    color: var(--color-on-ink);
   }
   .inner {
     max-width: var(--content-width);
@@ -50,28 +69,130 @@ const AFTER = ['予約ページの URL を送る', '相手が空いている枠�
     margin-top: 48px;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    gap: 20px;
   }
   .column {
-    padding: 28px;
-    border-radius: var(--radius);
-    border: 1px solid var(--color-ink-line);
-  }
-  .after {
-    border-color: #2bb39f;
-    background: rgb(43 179 159 / 0.08);
+    padding: 32px;
+    border-radius: 28px;
+    background: var(--color-surface);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
   .column-title {
-    margin: 0 0 18px;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    letter-spacing: 0.06em;
-    color: var(--color-ink-sub);
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text-sub);
   }
   .after .column-title {
-    color: #5fd3c0;
+    color: var(--color-accent);
   }
-  ol {
+  .thread {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .message {
+    max-width: 82%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .customer {
+    align-self: flex-start;
+  }
+  .staff {
+    align-self: flex-end;
+    align-items: flex-end;
+  }
+  .bubble {
+    padding: 10px 16px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .customer .bubble {
+    border-radius: 18px 18px 18px 4px;
+    background: var(--color-bg);
+  }
+  .staff .bubble {
+    border-radius: 18px 18px 4px 18px;
+    background: var(--color-busy);
+  }
+  .meta {
+    font-size: 11px;
+    color: var(--color-text-sub);
+  }
+  .note {
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px dashed var(--color-border);
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--color-text-sub);
+  }
+  .page {
+    padding: 20px;
+    border-radius: 20px;
+    background: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .page-head {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-avatar-3);
+    color: var(--color-avatar-3-ink);
+    font-size: 13px;
+  }
+  .page-name {
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .page-date {
+    margin-left: auto;
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--color-accent);
+  }
+  .slots {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .slots li {
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: var(--color-sky);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.4;
+    color: var(--color-free);
+  }
+  .slots .picked {
+    background: var(--color-free);
+    color: #ffffff;
+  }
+  .steps {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -80,47 +201,33 @@ const AFTER = ['予約ページの URL を送る', '相手が空いている枠�
     flex-direction: column;
     gap: 12px;
   }
-  li {
+  .steps li {
     counter-increment: step;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 14px;
     font-size: 15px;
   }
-  li::before {
-    content: counter(step);
+  .steps li::before {
+    content: counter(step, decimal-leading-zero);
     flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 1px solid var(--color-ink-line);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--color-ink-sub);
-  }
-  .before li {
-    color: var(--color-ink-sub);
-  }
-  .after li::before {
-    border-color: #2bb39f;
-    background: #2bb39f;
-    color: var(--color-ink);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--color-accent);
   }
   @media (max-width: 760px) {
     .highlight {
-      padding: 88px 16px;
+      padding: 80px 16px;
     }
     .compare {
       grid-template-columns: minmax(0, 1fr);
       margin-top: 36px;
     }
     .column {
-      padding: 22px 18px;
+      padding: 24px 18px;
     }
-    li {
+    .steps li {
       font-size: 14px;
     }
   }

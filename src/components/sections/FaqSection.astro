@@ -7,12 +7,16 @@ const FAQS = [
     answer: '現在は Google カレンダーに対応しています。空き枠の計算と、予約が入ったときの予定の作成に使います。',
   },
   {
-    question: '予約する側もアカウントが必要ですか？',
-    answer: '予約を確定するときに、Google アカウントでのログインをお願いしています。空き枠はログインしなくても確認できます。',
+    question: 'お客様もアカウントが必要ですか？',
+    answer: 'いいえ。お客様は名前とメールアドレスを入れ、届いたメールのリンクを開くと予約が確定します。予約ページごとに、Google アカウントでログインした方だけが予約できる設定にもできます。',
   },
   {
-    question: '複数のメンバーで予約を受けられますか？',
-    answer: 'はい。1 つの予約ページに複数のメンバーを登録できます。予約枠になるのは、登録したメンバー全員の予定が空いている時間です。',
+    question: 'スタッフを指名して予約してもらえますか？',
+    answer: 'スタッフごとに予約ページを作り、その URL から予約してもらう形で指名を受けます。1 つの予約ページに複数のスタッフを登録すると、登録した全員の予定が空いている時間だけが予約枠になります。',
+  },
+  {
+    question: 'スタッフ全員の予約をまとめて見られますか？',
+    answer: 'はい。店のアカウントで作った予約ページへの予約は、管理画面の予約一覧にまとめて並びます。どの予約ページから入った予約かも一覧でわかります。',
   },
   {
     question: '同じ時間に予約が重なることはありますか？',
@@ -20,7 +24,7 @@ const FAQS = [
   },
   {
     question: '予約が入ると、どうなりますか？',
-    answer: '予約ページを作ったメンバーの Google カレンダーに予定が入り、予約した方には確認メールが届きます。予約の内容は管理画面でも確認できます。',
+    answer: '予約ページを作ったアカウントの Google カレンダーに予定が入り、お客様には確認メールが届きます。予約の内容は管理画面でも確認できます。',
   },
   {
     question: '予約の受付を一時的に止められますか？',
@@ -34,7 +38,7 @@ const FAQS = [
 ---
 <section class="faq">
   <div class="inner">
-    <SectionHeading id="faq" time="14:00" eyebrow="FAQ" title="よくある質問" />
+    <SectionHeading id="faq" time="15:00" eyebrow="FAQ" title="よくある質問" />
     <div class="items">
       {FAQS.map((faq) => (
         <details class="item">
@@ -67,19 +71,15 @@ const FAQS = [
     gap: 10px;
   }
   .item {
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: 18px;
     background: var(--color-surface);
-  }
-  .item[open] {
-    border-color: var(--color-free);
   }
   summary {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    padding: 18px 20px;
+    padding: 20px 24px;
     cursor: pointer;
     list-style: none;
   }
@@ -107,7 +107,7 @@ const FAQS = [
     top: 11.5px;
     width: 10px;
     height: 1.5px;
-    background: var(--color-free);
+    background: var(--color-accent);
     transition: transform 0.2s ease;
   }
   .toggle::after {
@@ -118,7 +118,7 @@ const FAQS = [
   }
   .answer {
     margin: 0;
-    padding: 0 20px 20px;
+    padding: 0 24px 22px;
     font-size: 14px;
     line-height: 1.95;
     color: var(--color-text-sub);

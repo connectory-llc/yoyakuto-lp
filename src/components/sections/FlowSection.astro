@@ -3,16 +3,16 @@ import SectionHeading from '../SectionHeading.astro';
 
 const STEPS = [
   {
-    title: 'Google アカウントで登録',
-    body: 'Google アカウントでログインし、チームを作ります。一緒に予約を受けるメンバーはメールで招待できます。',
+    title: 'Google アカウントで店を登録',
+    body: 'Google アカウントでログインし、チームを作ります。スタッフはメールで招待し、それぞれの Google アカウントで参加してもらいます。',
   },
   {
-    title: '予約ページを作る',
-    body: '予約ページに担当するメンバーを登録し、受付時間と 1 枠の長さ、予約時に聞きたい項目を設定します。',
+    title: 'スタッフの予約ページを作る',
+    body: '予約ページにスタッフを 1 人登録し、受付時間と 1 枠の長さ、予約時に聞きたい項目を設定します。スタッフごとに同じ手順で作ります。',
   },
   {
-    title: 'URL を共有して受け付ける',
-    body: '公開すると予約ページの URL が発行されます。メールやサイトに載せれば、相手は空き枠を選んで予約できます。',
+    title: 'URL を載せて受け付ける',
+    body: '公開すると予約ページの URL が発行されます。SNS のプロフィールや店のサイトに載せれば、お客様は空いている枠を選んで予約できます。',
   },
 ];
 ---
@@ -20,10 +20,10 @@ const STEPS = [
   <div class="inner">
     <SectionHeading
       id="flow"
-      time="11:00"
+      time="13:00"
       eyebrow="How it works"
       title="使い始めるまで 3 ステップ"
-      lead="必要なのは Google アカウントだけです。予約ページの作成から公開まで、管理画面で完結します。"
+      lead="必要なのは Google アカウントだけです。スタッフの招待から予約ページの公開まで、管理画面で完結します。"
     />
     <ol class="steps">
       {STEPS.map((step, index) => (
@@ -61,7 +61,7 @@ const STEPS = [
     left: 20px;
     right: calc(100% / 3);
     height: 2px;
-    background: repeating-linear-gradient(90deg, var(--color-free) 0 6px, transparent 6px 12px);
+    background: repeating-linear-gradient(90deg, var(--color-border) 0 6px, transparent 6px 12px);
   }
   .step {
     position: relative;
@@ -73,17 +73,18 @@ const STEPS = [
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--color-free);
-    color: #ffffff;
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 16px;
+    background: var(--color-surface);
+    color: var(--color-accent);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 22px;
     box-shadow: 0 0 0 6px var(--color-bg);
   }
   h3 {
     margin: 20px 0 8px;
-    font-weight: 700;
-    font-size: 18px;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 19px;
   }
   p {
     margin: 0;
@@ -107,7 +108,7 @@ const STEPS = [
       right: auto;
       width: 2px;
       height: auto;
-      background: repeating-linear-gradient(180deg, var(--color-free) 0 6px, transparent 6px 12px);
+      background: repeating-linear-gradient(180deg, var(--color-border) 0 6px, transparent 6px 12px);
     }
     .step {
       padding-left: 60px;

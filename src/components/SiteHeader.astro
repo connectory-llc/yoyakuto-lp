@@ -26,10 +26,9 @@ import { SIGNUP_URL, SITE_NAME } from '../consts';
     z-index: 10;
     background: color-mix(in srgb, var(--color-bg) 88%, transparent);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--color-border);
   }
   .inner {
-    max-width: 1200px;
+    max-width: 1248px;
     height: var(--header-height);
     margin: 0 auto;
     padding: 0 32px;
@@ -46,21 +45,24 @@ import { SIGNUP_URL, SITE_NAME } from '../consts';
     text-decoration: none;
   }
   .brand-name {
-    font-weight: 700;
+    font-weight: 500;
     font-size: 20px;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
   }
   nav {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 4px;
+    padding: 6px;
+    border-radius: 999px;
+    background: var(--color-surface);
   }
   .nav-links {
     display: flex;
-    gap: 28px;
-    font-size: 14px;
+    font-size: 13px;
   }
   .nav-links a {
+    padding: 8px 16px;
     color: var(--color-text);
     text-decoration: none;
   }
@@ -71,17 +73,17 @@ import { SIGNUP_URL, SITE_NAME } from '../consts';
     display: inline-flex;
     align-items: center;
     min-height: 40px;
-    padding: 0 18px;
-    border-radius: 8px;
-    background: var(--color-ink);
-    color: var(--color-on-ink);
-    font-size: 14px;
+    padding: 0 20px;
+    border-radius: 999px;
+    background: var(--color-free);
+    color: #ffffff;
+    font-size: 13px;
     font-weight: 500;
     text-decoration: none;
   }
   .signup:hover {
-    background: var(--color-ink-hover);
-    color: var(--color-on-ink);
+    background: var(--color-free-hover);
+    color: #ffffff;
   }
   @media (max-width: 760px) {
     .inner {

@@ -6,25 +6,25 @@ import SectionHeading from '../SectionHeading.astro';
   <div class="inner">
     <SectionHeading
       id="get-started"
-      time="15:00"
+      time="16:00"
       eyebrow="Get started"
-      title="次の日程調整は、URL を送るだけに。"
-      lead="Google アカウントがあれば、今日から予約ページを公開できます。"
-      tone="ink"
+      title="指名の予約を DM から予約ページへ"
+      lead="Google アカウントがあれば、今日からスタッフの予約ページを公開できます。"
     />
-    <CtaButtons tone="ink" secondaryHref="#flow" secondaryLabel="使い方を見る" />
+    <CtaButtons secondaryHref="#flow" secondaryLabel="使い方を見る" />
   </div>
 </section>
 
 <style>
   .closing {
-    padding: 104px 32px;
-    background: var(--color-ink);
-    color: var(--color-on-ink);
+    padding: 0 32px 112px;
   }
   .inner {
     max-width: var(--content-width);
     margin: 0 auto;
+    padding: 64px 56px;
+    border-radius: 32px;
+    background: var(--color-sky);
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -33,7 +33,10 @@ import SectionHeading from '../SectionHeading.astro';
   }
   @media (max-width: 760px) {
     .closing {
-      padding: 80px 16px;
+      padding: 0 16px 80px;
+    }
+    .inner {
+      padding: 40px 22px;
     }
   }
 </style>

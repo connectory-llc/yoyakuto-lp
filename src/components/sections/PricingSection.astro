@@ -2,11 +2,11 @@
 import { SIGNUP_URL } from '../../consts';
 import SectionHeading from '../SectionHeading.astro';
 
-const INCLUDED = ['Google カレンダーとの連携', 'チームでの予約受付', '予約フォームの項目設定', '予約の確認メール'];
+const INCLUDED = ['スタッフごとの予約ページ', 'Google カレンダーとの連携', '予約の一覧と管理', '予約フォームの項目設定', '予約の確認メール'];
 ---
 <section class="pricing">
   <div class="inner">
-    <SectionHeading id="pricing" time="13:00" eyebrow="Pricing" title="料金" />
+    <SectionHeading id="pricing" time="14:00" eyebrow="Pricing" title="料金" />
     <div class="card">
       <div class="status">
         <p class="status-title">料金プランは準備中です</p>
@@ -25,9 +25,6 @@ const INCLUDED = ['Google カレンダーとの連携', 'チームでの予約�
 <style>
   .pricing {
     padding: 112px 32px;
-    background: var(--color-surface);
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
   }
   .inner {
     max-width: var(--content-width);
@@ -37,9 +34,8 @@ const INCLUDED = ['Google カレンダーとの連携', 'チームでの予約�
     margin-top: 48px;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    border: 1px solid var(--color-border);
-    border-top: 4px solid var(--color-free);
-    border-radius: var(--radius);
+    border-radius: 28px;
+    background: var(--color-surface);
     overflow: hidden;
   }
   .status {
@@ -50,7 +46,8 @@ const INCLUDED = ['Google カレンダーとの連携', 'チームでの予約�
   }
   .status-title {
     margin: 0;
-    font-weight: 700;
+    font-family: var(--font-serif);
+    font-weight: 600;
     font-size: 22px;
   }
   .note {
@@ -64,7 +61,7 @@ const INCLUDED = ['Google カレンダーとの連携', 'チームでの予約�
     display: flex;
     flex-direction: column;
     gap: 24px;
-    background: var(--color-bg);
+    background: var(--color-sky);
   }
   ul {
     margin: 0;
@@ -86,7 +83,7 @@ const INCLUDED = ['Google カレンダーとの連携', 'チームでの予約�
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: var(--color-free)
+    background: var(--color-accent)
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='m4.5 8 2.5 2.5 4.5-5'/%3E%3C/svg%3E")
       center / 12px no-repeat;
   }
@@ -94,8 +91,8 @@ const INCLUDED = ['Google カレンダーとの連携', 'チームでの予約�
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 50px;
-    border-radius: 8px;
+    min-height: 54px;
+    border-radius: 999px;
     background: var(--color-free);
     color: #ffffff;
     font-size: 15px;

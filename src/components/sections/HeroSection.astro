@@ -1,109 +1,68 @@
 ---
+import { freeSlotsOf, NOMINATED, pageName, SAMPLE_DATE_LABEL, SLOT_COUNT, slotLabel, STAFF } from '../../sampleSchedule';
 import CtaButtons from '../CtaButtons.astro';
 
-const DAY_START_HOUR = 9;
-const SLOT_MINUTES = 30;
-const SLOTS_PER_HOUR = 60 / SLOT_MINUTES;
-const SLOT_COUNT = 18;
-const AXIS_EVERY_SLOTS = 6;
-const MINUTES_PER_HOUR = 60;
-const TWO_DIGITS = 2;
-
-// 見本の予定。start と end は 9:00 から数えた 30 分枠の位置で、end の枠は含まない
-const MEMBERS = [
-  { role: '営業', color: 'var(--color-member-1)', busy: [{ start: 1, end: 4 }, { start: 8, end: 10 }, { start: 15, end: 17 }] },
-  { role: 'カスタマーサクセス', color: 'var(--color-member-2)', busy: [{ start: 0, end: 1 }, { start: 5, end: 7 }, { start: 12, end: 14 }] },
-  { role: 'エンジニア', color: 'var(--color-member-3)', busy: [{ start: 3, end: 5 }, { start: 6, end: 8 }] },
-];
-
-const slotLabel = (slot: number) => {
-  const minutes = DAY_START_HOUR * MINUTES_PER_HOUR + slot * SLOT_MINUTES;
-  const hour = Math.floor(minutes / MINUTES_PER_HOUR);
-  const minute = String(minutes % MINUTES_PER_HOUR).padStart(TWO_DIGITS, '0');
-  return `${hour}:${minute}`;
-};
-
-const isBusy = (slot: number) =>
-  MEMBERS.some((member) => member.busy.some((range) => range.start <= slot && slot < range.end));
-const freeSlots = Array.from({ length: SLOT_COUNT }, (_, slot) => slot).filter((slot) => !isBusy(slot));
-const axis = Array.from({ length: SLOT_COUNT / AXIS_EVERY_SLOTS + 1 }, (_, index) => index * AXIS_EVERY_SLOTS);
+const nominatedFreeSlots = freeSlotsOf(NOMINATED);
 const gridColumn = (start: number, end: number) => `${start + 1} / ${end + 1}`;
-const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
 ---
 <section class="hero" aria-labelledby="hero-title">
   <div class="inner">
     <div class="copy">
-      <p class="tag">Google カレンダー連携の日程調整サービス</p>
-      <h1 id="hero-title">チームの空き時間を、<br />そのまま予約ページに。</h1>
-      <p class="lead">
-        メンバー全員の Google カレンダーを重ねて、全員が空いている時間だけを予約枠として公開します。予約ページの URL を送れば、日程を決めるためのメールの往復は要りません。
-      </p>
-      <CtaButtons />
+      <p class="tagline" lang="en">Reservations for the person you choose</p>
+      <h1 id="hero-title"><span>その予約</span> <span>まだ DM で受けていますか</span></h1>
+      <div class="lead-row">
+        <span class="rule" aria-hidden="true"></span>
+        <p class="lead">
+          担当を指名して予約できる予約受付サービスです。スタッフ一人ひとりに予約ページを用意でき、入った予約は管理画面と Google カレンダーにまとめて届きます。日時を決めるための DM のやり取りは要りません。
+        </p>
+      </div>
+      <CtaButtons secondaryHref="#before-after" secondaryLabel="DM との違いを見る" />
     </div>
 
     <figure class="board">
       <div class="card" aria-hidden="true">
-        <div class="card-head">
-          <span class="card-title">商談（30 分）</span>
-          <span class="card-date">10/14 火</span>
-        </div>
+        <p class="card-head">
+          <span class="card-title">スタッフの予定</span>
+          <span class="card-date" lang="en">{SAMPLE_DATE_LABEL}</span>
+        </p>
         <div class="rows">
-          {MEMBERS.map((member) => (
-            <div class="row">
-              <span class="role">
-                <span class="swatch" style={`background: ${member.color}`}></span>
-                {member.role}
+          {STAFF.map((staff) => (
+            <div class:list={['row', { nominated: staff === NOMINATED }]}>
+              <span class="name">
+                <span class="avatar" style={`background: var(--color-avatar-${staff.avatar}); color: var(--color-avatar-${staff.avatar}-ink)`}>{staff.initial}</span>
+                {staff.name}
               </span>
               <span class="track" style={`--slots: ${SLOT_COUNT}`}>
-                {member.busy.map((range) => (
-                  <span class="block" style={`grid-column: ${gridColumn(range.start, range.end)}; --block-color: ${member.color}`}></span>
+                {staff.busy.map((range) => (
+                  <span class="block" style={`grid-column: ${gridColumn(range.start, range.end)}`}></span>
                 ))}
+                {staff === NOMINATED &&
+                  nominatedFreeSlots.map((slot) => (
+                    <span class="free" style={`grid-column: ${gridColumn(slot, slot + 1)}`}></span>
+                  ))}
               </span>
             </div>
           ))}
-          <div class="row result">
-            <span class="role">予約できる枠</span>
-            <span class="track" style={`--slots: ${SLOT_COUNT}`}>
-              {freeSlots.map((slot) => (
-                <span class="free" style={`grid-column: ${gridColumn(slot, slot + 1)}`}></span>
-              ))}
-            </span>
-          </div>
-          <div class="row axis-row">
-            <span class="role"></span>
-            <span class="axis">
-              {axis.map((slot) => (
-                <span style={`left: ${(slot / SLOT_COUNT) * 100}%`}>{slotLabel(slot)}</span>
-              ))}
-            </span>
-          </div>
         </div>
-        <div class="page">
-          <p class="page-label">予約ページに表示される枠</p>
-          <ul class="chips">
-            {freeSlots.map((slot) => <li>{slotLabel(slot)}</li>)}
-          </ul>
-        </div>
+        <p class="page-label">{pageName(NOMINATED)}</p>
+        <ul class="chips">
+          {nominatedFreeSlots.map((slot) => <li>{slotLabel(slot)}</li>)}
+        </ul>
       </div>
-      <figcaption>3 人の予定を重ねると、全員が空いている {freeHours} 時間だけが予約枠になります（イメージ）。</figcaption>
+      <figcaption>
+        予約ページに並ぶのは、指名されたスタッフの予定が空いている時間だけです。この見本では{NOMINATED.name}さんの {nominatedFreeSlots.length} 枠が並びます。
+      </figcaption>
     </figure>
   </div>
 </section>
 
 <style>
-  .hero {
-    background:
-      linear-gradient(var(--color-grid) 1px, transparent 1px) 0 0 / 100% 48px,
-      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px) 0 0 / 96px 100%,
-      var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-  }
   .inner {
-    max-width: 1200px;
+    max-width: 1248px;
     margin: 0 auto;
-    padding: 96px 32px 104px;
+    padding: 64px 32px 96px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     align-items: center;
     gap: 64px;
   }
@@ -111,33 +70,48 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 24px;
+    gap: 28px;
   }
-  .tag {
+  .tagline {
     margin: 0;
-    padding: 4px 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    background: var(--color-surface);
-    font-size: 13px;
-    color: var(--color-text-sub);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    color: var(--color-accent);
   }
   h1 {
     margin: 0;
-    font-weight: 700;
-    font-size: 46px;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: clamp(32px, 3.4vw, 48px);
     line-height: 1.45;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.03em;
+  }
+  h1 span {
+    display: block;
+  }
+  .lead-row {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .rule {
+    flex: none;
+    width: 48px;
+    height: 1px;
+    margin-top: 16px;
+    background: var(--color-accent);
   }
   .lead {
     margin: 0;
-    max-width: 520px;
-    font-size: 16px;
-    line-height: 2;
+    max-width: 480px;
+    font-size: 15px;
+    line-height: 2.1;
     color: var(--color-text-sub);
   }
   .copy :global(.cta) {
-    margin-top: 8px;
+    margin-left: 80px;
   }
 
   .board {
@@ -147,114 +121,90 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
     gap: 14px;
   }
   .card {
-    padding: 24px;
-    border: 1px solid var(--color-border);
-    border-radius: 16px;
+    padding: 32px 28px;
+    border-radius: 28px;
     background: var(--color-surface);
-    box-shadow: 0 30px 60px -36px rgb(21 32 51 / 0.35);
+    box-shadow: 0 30px 60px -44px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
   .card-head {
+    margin: 0;
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--color-border);
   }
   .card-title {
-    font-weight: 700;
-    font-size: 16px;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 600;
   }
   .card-date {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--color-text-sub);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--color-accent);
   }
   .rows {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 18px 0 6px;
+    gap: 12px;
+    padding: 20px;
+    border-radius: 18px;
+    background: var(--color-bg);
   }
   .row {
     display: grid;
-    grid-template-columns: 132px minmax(0, 1fr);
+    grid-template-columns: 96px minmax(0, 1fr);
     align-items: center;
-    gap: 12px;
+    gap: 10px;
   }
-  .role {
+  .name {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 12px;
+    font-size: 13px;
     color: var(--color-text-sub);
     white-space: nowrap;
   }
-  .swatch {
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
+  .nominated .name {
+    font-weight: 700;
+    color: var(--color-text);
+  }
+  .avatar {
+    width: 26px;
+    height: 26px;
+    flex: none;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
   }
   .track {
     display: grid;
     grid-template-columns: repeat(var(--slots), minmax(0, 1fr));
-    height: 26px;
-    border-radius: 6px;
-    background: repeating-linear-gradient(
-      90deg,
-      var(--color-bg) 0 calc(100% / var(--slots) - 1px),
-      var(--color-grid) calc(100% / var(--slots) - 1px) calc(100% / var(--slots))
-    );
+    height: 20px;
   }
-  .block {
-    grid-row: 1;
-    margin: 3px 1px;
-    border-radius: 4px;
-    background: color-mix(in srgb, var(--block-color) 22%, white);
-    border-left: 3px solid var(--block-color);
-  }
-  .result {
-    margin-top: 6px;
-    padding-top: 14px;
-    border-top: 1px dashed var(--color-border);
-  }
-  .result .role {
-    font-weight: 700;
-    color: var(--color-free);
-  }
+  .block,
   .free {
     grid-row: 1;
     margin: 3px 1px;
     border-radius: 4px;
+  }
+  .block {
+    background: var(--color-busy);
+  }
+  .free {
     background: var(--color-free);
   }
-  .axis {
-    position: relative;
-    height: 18px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--color-text-sub);
-  }
-  .axis span {
-    position: absolute;
-    transform: translateX(-50%);
-  }
-  .axis span:first-child {
-    transform: none;
-  }
-  .axis span:last-child {
-    transform: translateX(-100%);
-  }
-  .page {
-    margin-top: 14px;
-    padding: 16px;
-    border-radius: 10px;
-    background: var(--color-free-soft);
-  }
   .page-label {
-    margin: 0 0 10px;
+    margin: 0;
     font-size: 12px;
-    font-weight: 500;
-    color: var(--color-free);
+    font-weight: 700;
+    color: var(--color-accent);
   }
   .chips {
     margin: 0;
@@ -265,12 +215,13 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
     gap: 8px;
   }
   .chips li {
-    padding: 6px 14px;
-    border: 1px solid var(--color-free);
-    border-radius: 6px;
-    background: var(--color-surface);
-    font-family: var(--font-mono);
-    font-size: 14px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: var(--color-sky);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 20px;
+    line-height: 1.4;
     color: var(--color-free);
   }
   figcaption {
@@ -282,29 +233,38 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
   @media (max-width: 960px) {
     .inner {
       grid-template-columns: minmax(0, 1fr);
-      padding: 64px 16px 80px;
+      padding: 40px 16px 80px;
       gap: 48px;
     }
     h1 {
-      font-size: 34px;
+      font-size: max(26px, min(40px, calc((100vw - 32px) / 13)));
+    }
+    .lead-row {
+      gap: 20px;
+    }
+    .rule {
+      width: 28px;
+    }
+    .copy :global(.cta) {
+      margin-left: 0;
     }
   }
   @media (max-width: 480px) {
-    h1 {
-      font-size: 27px;
+    .lead-row {
+      display: block;
     }
-    .lead {
-      font-size: 15px;
+    .rule {
+      display: none;
     }
     .card {
-      padding: 18px 14px;
+      padding: 22px 16px;
+    }
+    .rows {
+      padding: 14px 12px;
     }
     .row {
       grid-template-columns: minmax(0, 1fr);
       gap: 4px;
-    }
-    .axis-row .role {
-      display: none;
     }
   }
 </style>

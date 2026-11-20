@@ -1,9 +1,11 @@
 import { SITE_NAME } from '../../consts';
 import { renderOgImage } from '../../og/render';
+import { freeSlotsOf, NOMINATED, slotLabel } from '../../sampleSchedule';
 
-const OG_LABEL = `${SITE_NAME} チームの日程調整サービス`;
-const OG_HEADING_LINES = ['チームの空き時間を、', 'そのまま予約ページに。'];
-const OG_SLOTS = ['14:00', '14:30', '16:00', '17:30'];
+const OG_LABEL = `${SITE_NAME} 担当を指名して予約できる予約受付サービス`;
+const OG_HEADING_LINES = ['その予約', 'まだ DM で受けていますか'];
+const OG_SLOT_COUNT = 4;
+const OG_SLOTS = freeSlotsOf(NOMINATED).slice(0, OG_SLOT_COUNT).map(slotLabel);
 
 export async function GET() {
   return new Response(await renderOgImage(OG_LABEL, OG_HEADING_LINES, OG_SLOTS), {

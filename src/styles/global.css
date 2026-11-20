@@ -1,27 +1,29 @@
 :root {
-  --color-bg: #f7f8fa;
+  --color-bg: #f4f8fd;
   --color-surface: #ffffff;
-  --color-text: #152033;
-  --color-text-sub: #566176;
-  --color-border: #e1e6ee;
-  --color-grid: #eceff5;
-  --color-free: #0f7b6c;
-  --color-free-hover: #0b6457;
-  --color-free-soft: #e2f3ef;
-  --color-busy: #dfe4ec;
-  --color-ink: #152033;
-  --color-ink-hover: #24324a;
-  --color-ink-sub: #aab4c5;
-  --color-ink-line: #2c3a52;
-  --color-on-ink: #f7f8fa;
-  --color-member-1: #5b6fd0;
-  --color-member-2: #d9822b;
-  --color-member-3: #c0507f;
-  --font-sans: 'IBM Plex Sans JP', 'Hiragino Sans', sans-serif;
+  --color-sky: #e6f0fa;
+  --color-text: #1e2733;
+  --color-text-sub: #5e6873;
+  --color-border: #dce6f0;
+  --color-free: #56688f;
+  --color-free-hover: #45557a;
+  --color-free-soft: #e6f0fa;
+  --color-busy: #e4eaf2;
+  --color-accent: #2e3b57;
+  --shadow-color: rgb(86 104 143 / 0.35);
+  --color-avatar-1: #f6e4ea;
+  --color-avatar-1-ink: #6a3e55;
+  --color-avatar-2: #eef0e2;
+  --color-avatar-2-ink: #4a5236;
+  --color-avatar-3: #dce8f6;
+  --color-avatar-3-ink: #3f5070;
+  --font-sans: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --font-serif: 'Shippori Mincho B1', 'Hiragino Mincho ProN', serif;
+  --font-accent: 'Cormorant Garamond', 'Times New Roman', serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
   --radius: 10px;
   --content-width: 1080px;
-  --header-height: 68px;
+  --header-height: 72px;
 }
 
 *,
@@ -48,7 +50,7 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans);
   line-height: 1.8;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   -webkit-font-smoothing: antialiased;
 }
 

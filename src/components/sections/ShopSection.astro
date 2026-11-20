@@ -1,0 +1,155 @@
+---
+import { pageName, STAFF } from '../../sampleSchedule';
+import SectionHeading from '../SectionHeading.astro';
+
+// 管理画面の予約一覧の見本。予約が入った時間は、見本の予定で埋まっている時間に合わせる
+const [MIKA, YUTO, SAKI] = STAFF;
+const RESERVATIONS = [
+  { date: '11/21 土 10:00', staff: SAKI, customer: '山本 様' },
+  { date: '11/21 土 12:30', staff: MIKA, customer: '佐藤 様' },
+  { date: '11/21 土 15:00', staff: YUTO, customer: '高橋 様' },
+  { date: '11/22 日 10:30', staff: SAKI, customer: '伊藤 様' },
+];
+---
+<section class="shop">
+  <div class="inner">
+    <SectionHeading
+      id="shop"
+      time="11:00"
+      eyebrow="For the shop"
+      title="スタッフ全員の予約を 店の一覧で見る"
+      lead="予約ページから入った予約は、どのスタッフのページから入ったかとあわせて管理画面の一覧に並びます。スタッフに一件ずつ確かめなくても、店に入っている予約がわかります。"
+    />
+    <figure class="list">
+      <p class="list-head">
+        <span class="list-title">予約一覧</span>
+        <span class="list-note">管理画面のイメージ</span>
+      </p>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">日時</th>
+              <th scope="col">予約ページ</th>
+              <th scope="col">お客様</th>
+            </tr>
+          </thead>
+          <tbody>
+            {RESERVATIONS.map((reservation) => (
+              <tr>
+                <td class="date">{reservation.date}</td>
+                <td>
+                  <span class="page">
+                    <span
+                      class="avatar"
+                      aria-hidden="true"
+                      style={`background: var(--color-avatar-${reservation.staff.avatar}); color: var(--color-avatar-${reservation.staff.avatar}-ink)`}
+                    >
+                      {reservation.staff.initial}
+                    </span>
+                    {pageName(reservation.staff)}
+                  </span>
+                </td>
+                <td>{reservation.customer}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .shop {
+    padding: 0 32px 112px;
+  }
+  .inner {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: center;
+    gap: 56px;
+  }
+  .list {
+    margin: 0;
+    border-radius: 28px;
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+  .list-head {
+    margin: 0;
+    padding: 20px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .list-title {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .list-note {
+    font-size: 12px;
+    color: var(--color-text-sub);
+  }
+  .scroll {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    min-width: 480px;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-sub);
+  }
+  td {
+    padding: 14px 20px;
+    border-top: 1px solid var(--color-border);
+  }
+  th:first-child,
+  td:first-child {
+    padding-left: 28px;
+  }
+  .date {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 17px;
+    white-space: nowrap;
+    color: var(--color-accent);
+  }
+  .page {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+  @media (max-width: 960px) {
+    .inner {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 36px;
+    }
+  }
+  @media (max-width: 760px) {
+    .shop {
+      padding: 0 16px 80px;
+    }
+  }
+</style>

@@ -13,7 +13,18 @@ function horizontalOverflow(page: Page) {
   return page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 }
 
-const SECTION_HEADINGS = ['主な機能', '使い始めるまで 3 ステップ', '料金', 'よくある質問'];
+const SECTION_HEADINGS = [
+  '予約の受付を DM から外す',
+  'スタッフ全員の予約を 店の一覧で見る',
+  '主な機能',
+  '使い始めるまで 3 ステップ',
+  '料金',
+  'よくある質問',
+];
+const MINUTES_PER_HOUR = 60;
+// 句の途中で折り返さないことを確かめる幅。スマホ幅より広い範囲から、ブレークポイントの前後を選ぶ
+const PHRASE_KEEP_WIDTHS = [500, 560, 768, 961, 1024, 1440];
+const VIEWPORT_HEIGHT = 900;
 
 test.describe('トップページ', () => {
   test.beforeEach(async ({ page }) => {
@@ -22,12 +33,41 @@ test.describe('トップページ', () => {
 
   test('サービス名を含むタイトルとキャッチコピーが表示される', async ({ page }) => {
     await expect(page).toHaveTitle(/Yoyakuto/);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('チームの空き時間を、そのまま予約ページに。');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('その予約 まだ DM で受けていますか');
+  });
+
+  test('キャッチコピーは句読点を入れず、半角スペースの位置で改行できるように句を分ける', async ({ page }) => {
+    const heading = page.getByRole('heading', { level: 1 });
+    await expect(heading).not.toContainText('、');
+    await expect(heading).not.toContainText('。');
+    const phrases = heading.locator('span');
+    await expect(phrases).toHaveText(['その予約', 'まだ DM で受けていますか']);
   });
 
   test('機能・使い方・料金・よくある質問の各セクションが表示される', async ({ page }) => {
     for (const heading of SECTION_HEADINGS) {
       await expect(page.getByRole('heading', { level: 2, name: heading, exact: true })).toBeVisible();
+    }
+  });
+
+  test('各セクションの見出しの時刻は、上から順に 1 日の予定のように進む', async ({ page }) => {
+    const labels = await page.locator('.section-heading .time').allTextContents();
+    const minutes = labels.map((label) => {
+      const [hour, minute] = label.trim().split(':').map(Number);
+      return hour * MINUTES_PER_HOUR + minute;
+    });
+    expect(minutes.length).toBe(SECTION_HEADINGS.length + 1);
+    expect(minutes).toEqual([...minutes].sort((a, b) => a - b));
+    expect(new Set(minutes).size).toBe(minutes.length);
+  });
+
+  test('タブレットからデスクトップの幅では、キャッチコピーの句が途中で折り返さない', async ({ page }) => {
+    for (const width of PHRASE_KEEP_WIDTHS) {
+      await page.setViewportSize({ width, height: VIEWPORT_HEIGHT });
+      const lines = await page.locator('h1 span').evaluateAll((spans) =>
+        spans.map((span) => Math.round(span.getBoundingClientRect().height / parseFloat(getComputedStyle(span).lineHeight))),
+      );
+      expect(lines, `${width}px`).toEqual([1, 1]);
     }
   });
 
@@ -47,8 +87,8 @@ test.describe('トップページ', () => {
   });
 
   test('よくある質問は質問を押すと回答が開き、もう一度押すと閉じる', async ({ page }) => {
-    const question = page.getByText('予約する側もアカウントが必要ですか？');
-    const answer = page.getByText('予約を確定するときに、Google アカウントでのログインをお願いしています。', { exact: false });
+    const question = page.getByText('お客様もアカウントが必要ですか？');
+    const answer = page.getByText('お客様は名前とメールアドレスを入れ、届いたメールのリンクを開くと予約が確定します。', { exact: false });
 
     await expect(answer).toBeHidden();
     await question.click();
