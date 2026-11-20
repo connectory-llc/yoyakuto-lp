@@ -1,20 +1,20 @@
 ---
 import CtaButtons from '../CtaButtons.astro';
 
-const DAY_START_HOUR = 9;
+const DAY_START_HOUR = 10;
 const SLOT_MINUTES = 30;
-const SLOTS_PER_HOUR = 60 / SLOT_MINUTES;
 const SLOT_COUNT = 18;
 const AXIS_EVERY_SLOTS = 6;
 const MINUTES_PER_HOUR = 60;
 const TWO_DIGITS = 2;
 
-// 見本の予定。start と end は 9:00 から数えた 30 分枠の位置で、end の枠は含まない
-const MEMBERS = [
-  { role: '営業', color: 'var(--color-member-1)', busy: [{ start: 1, end: 4 }, { start: 8, end: 10 }, { start: 15, end: 17 }] },
-  { role: 'カスタマーサクセス', color: 'var(--color-member-2)', busy: [{ start: 0, end: 1 }, { start: 5, end: 7 }, { start: 12, end: 14 }] },
-  { role: 'エンジニア', color: 'var(--color-member-3)', busy: [{ start: 3, end: 5 }, { start: 6, end: 8 }] },
+// 見本の予定。start と end は 10:00 から数えた 30 分枠の位置で、end の枠は含まない
+const STAFF = [
+  { name: 'ミカ', color: 'var(--color-member-1)', busy: [{ start: 0, end: 3 }, { start: 5, end: 9 }, { start: 12, end: 14 }, { start: 15, end: 18 }] },
+  { name: 'ユウト', color: 'var(--color-member-2)', busy: [{ start: 1, end: 4 }, { start: 6, end: 8 }, { start: 10, end: 13 }, { start: 14, end: 17 }] },
+  { name: 'サキ', color: 'var(--color-member-3)', busy: [{ start: 0, end: 2 }, { start: 3, end: 6 }, { start: 8, end: 11 }, { start: 13, end: 15 }, { start: 16, end: 18 }] },
 ];
+const NOMINATED_INDEX = 2;
 
 const slotLabel = (slot: number) => {
   const minutes = DAY_START_HOUR * MINUTES_PER_HOUR + slot * SLOT_MINUTES;
@@ -23,20 +23,20 @@ const slotLabel = (slot: number) => {
   return `${hour}:${minute}`;
 };
 
-const isBusy = (slot: number) =>
-  MEMBERS.some((member) => member.busy.some((range) => range.start <= slot && slot < range.end));
-const freeSlots = Array.from({ length: SLOT_COUNT }, (_, slot) => slot).filter((slot) => !isBusy(slot));
+const nominated = STAFF[NOMINATED_INDEX];
+const nominatedFreeSlots = Array.from({ length: SLOT_COUNT }, (_, slot) => slot).filter(
+  (slot) => !nominated.busy.some((range) => range.start <= slot && slot < range.end),
+);
 const axis = Array.from({ length: SLOT_COUNT / AXIS_EVERY_SLOTS + 1 }, (_, index) => index * AXIS_EVERY_SLOTS);
 const gridColumn = (start: number, end: number) => `${start + 1} / ${end + 1}`;
-const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
 ---
 <section class="hero" aria-labelledby="hero-title">
   <div class="inner">
     <div class="copy">
-      <p class="tag">Google カレンダー連携の日程調整サービス</p>
-      <h1 id="hero-title">チームの空き時間を、<br />そのまま予約ページに。</h1>
+      <p class="tag">スタッフ指名の予約受付サービス</p>
+      <h1 id="hero-title"><span>その予約</span> <span>まだ DM で受けていますか</span></h1>
       <p class="lead">
-        メンバー全員の Google カレンダーを重ねて、全員が空いている時間だけを予約枠として公開します。予約ページの URL を送れば、日程を決めるためのメールの往復は要りません。
+        スタッフ一人ひとりに、指名の予約を受ける予約ページを用意できます。お客様は空いている枠を選んで予約し、入った予約は店の管理画面と Google カレンダーにまとめて届きます。日時を決めるための DM のやり取りは要りません。
       </p>
       <CtaButtons />
     </div>
@@ -44,33 +44,30 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
     <figure class="board">
       <div class="card" aria-hidden="true">
         <div class="card-head">
-          <span class="card-title">商談（30 分）</span>
-          <span class="card-date">10/14 火</span>
+          <span class="card-title">スタッフの予定</span>
+          <span class="card-date">11/21 土</span>
         </div>
         <div class="rows">
-          {MEMBERS.map((member) => (
-            <div class="row">
-              <span class="role">
-                <span class="swatch" style={`background: ${member.color}`}></span>
-                {member.role}
+          {STAFF.map((staff, index) => (
+            <div class:list={['row', { nominated: index === NOMINATED_INDEX }]}>
+              <span class="name">
+                <span class="swatch" style={`background: ${staff.color}`}></span>
+                {staff.name}
+                {index === NOMINATED_INDEX && <span class="badge">指名</span>}
               </span>
               <span class="track" style={`--slots: ${SLOT_COUNT}`}>
-                {member.busy.map((range) => (
-                  <span class="block" style={`grid-column: ${gridColumn(range.start, range.end)}; --block-color: ${member.color}`}></span>
+                {staff.busy.map((range) => (
+                  <span class="block" style={`grid-column: ${gridColumn(range.start, range.end)}; --block-color: ${staff.color}`}></span>
                 ))}
+                {index === NOMINATED_INDEX &&
+                  nominatedFreeSlots.map((slot) => (
+                    <span class="free" style={`grid-column: ${gridColumn(slot, slot + 1)}`}></span>
+                  ))}
               </span>
             </div>
           ))}
-          <div class="row result">
-            <span class="role">予約できる枠</span>
-            <span class="track" style={`--slots: ${SLOT_COUNT}`}>
-              {freeSlots.map((slot) => (
-                <span class="free" style={`grid-column: ${gridColumn(slot, slot + 1)}`}></span>
-              ))}
-            </span>
-          </div>
           <div class="row axis-row">
-            <span class="role"></span>
+            <span class="name"></span>
             <span class="axis">
               {axis.map((slot) => (
                 <span style={`left: ${(slot / SLOT_COUNT) * 100}%`}>{slotLabel(slot)}</span>
@@ -79,13 +76,15 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
           </div>
         </div>
         <div class="page">
-          <p class="page-label">予約ページに表示される枠</p>
+          <p class="page-label">{nominated.name}さんの予約ページ</p>
           <ul class="chips">
-            {freeSlots.map((slot) => <li>{slotLabel(slot)}</li>)}
+            {nominatedFreeSlots.map((slot) => <li>{slotLabel(slot)}</li>)}
           </ul>
         </div>
       </div>
-      <figcaption>3 人の予定を重ねると、全員が空いている {freeHours} 時間だけが予約枠になります（イメージ）。</figcaption>
+      <figcaption>
+        予約ページに並ぶのは、指名されたスタッフの予定が空いている時間だけです。この見本では{nominated.name}さんの {nominatedFreeSlots.length} 枠が並びます。
+      </figcaption>
     </figure>
   </div>
 </section>
@@ -103,7 +102,7 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
     margin: 0 auto;
     padding: 96px 32px 104px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
     align-items: center;
     gap: 64px;
   }
@@ -125,9 +124,12 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
   h1 {
     margin: 0;
     font-weight: 700;
-    font-size: 46px;
+    font-size: 44px;
     line-height: 1.45;
     letter-spacing: 0.01em;
+  }
+  h1 span {
+    display: inline-block;
   }
   .lead {
     margin: 0;
@@ -177,17 +179,35 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
   }
   .row {
     display: grid;
-    grid-template-columns: 132px minmax(0, 1fr);
+    grid-template-columns: 112px minmax(0, 1fr);
     align-items: center;
     gap: 12px;
   }
-  .role {
+  .name {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 12px;
+    font-size: 13px;
     color: var(--color-text-sub);
     white-space: nowrap;
+  }
+  .badge {
+    padding: 0 8px;
+    border-radius: 999px;
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+    font-size: 11px;
+    line-height: 20px;
+  }
+  .nominated {
+    margin: 0 -10px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: var(--color-bg);
+  }
+  .nominated .name {
+    font-weight: 700;
+    color: var(--color-text);
   }
   .swatch {
     width: 8px;
@@ -211,15 +231,6 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
     border-radius: 4px;
     background: color-mix(in srgb, var(--block-color) 22%, white);
     border-left: 3px solid var(--block-color);
-  }
-  .result {
-    margin-top: 6px;
-    padding-top: 14px;
-    border-top: 1px dashed var(--color-border);
-  }
-  .result .role {
-    font-weight: 700;
-    color: var(--color-free);
   }
   .free {
     grid-row: 1;
@@ -286,12 +297,12 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
       gap: 48px;
     }
     h1 {
-      font-size: 34px;
+      font-size: 38px;
     }
   }
   @media (max-width: 480px) {
     h1 {
-      font-size: 27px;
+      font-size: 28px;
     }
     .lead {
       font-size: 15px;
@@ -303,7 +314,7 @@ const freeHours = (freeSlots.length / SLOTS_PER_HOUR).toString();
       grid-template-columns: minmax(0, 1fr);
       gap: 4px;
     }
-    .axis-row .role {
+    .axis-row .name {
       display: none;
     }
   }

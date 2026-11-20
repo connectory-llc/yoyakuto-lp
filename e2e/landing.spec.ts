@@ -22,7 +22,15 @@ test.describe('トップページ', () => {
 
   test('サービス名を含むタイトルとキャッチコピーが表示される', async ({ page }) => {
     await expect(page).toHaveTitle(/Yoyakuto/);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('チームの空き時間を、そのまま予約ページに。');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('その予約 まだ DM で受けていますか');
+  });
+
+  test('キャッチコピーは句読点を入れず、半角スペースの位置で改行できるように句を分ける', async ({ page }) => {
+    const heading = page.getByRole('heading', { level: 1 });
+    await expect(heading).not.toContainText('、');
+    await expect(heading).not.toContainText('。');
+    const phrases = heading.locator('span');
+    await expect(phrases).toHaveText(['その予約', 'まだ DM で受けていますか']);
   });
 
   test('機能・使い方・料金・よくある質問の各セクションが表示される', async ({ page }) => {
