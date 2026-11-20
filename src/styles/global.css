@@ -20,8 +20,6 @@
   --font-sans: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
   --font-serif: 'Shippori Mincho B1', 'Hiragino Mincho ProN', serif;
   --font-accent: 'Cormorant Garamond', 'Times New Roman', serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --radius: 10px;
   --content-width: 1080px;
   --header-height: 72px;
 }
