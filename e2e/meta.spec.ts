@@ -6,7 +6,8 @@ const OG_IMAGE_HEIGHT = '630';
 const HTTP_OK = 200;
 const HTTP_NOT_FOUND = 404;
 const NONE = 0;
-// PNG の IHDR チャンクで幅と高さが入っている位置
+// PNG の先頭 8 バイトの署名と、IHDR チャンクで幅と高さが入っている位置
+const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 const PNG_WIDTH_OFFSET = 16;
 const PNG_HEIGHT_OFFSET = 20;
 
@@ -41,7 +42,10 @@ test.describe('検索エンジンと SNS 向けの情報', () => {
   });
 
   test('OGP 画像の実際の大きさは head に出したサイズと一致する', async ({ request }) => {
-    const body = await (await request.get('/og/index.png')).body();
+    const response = await request.get('/og/index.png');
+    expect(response.status()).toBe(HTTP_OK);
+    const body = await response.body();
+    expect(body.subarray(0, PNG_SIGNATURE.length)).toEqual(PNG_SIGNATURE);
     expect(String(body.readUInt32BE(PNG_WIDTH_OFFSET))).toBe(OG_IMAGE_WIDTH);
     expect(String(body.readUInt32BE(PNG_HEIGHT_OFFSET))).toBe(OG_IMAGE_HEIGHT);
   });
