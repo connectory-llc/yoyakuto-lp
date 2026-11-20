@@ -17,9 +17,12 @@
   --color-free-on-ink: #bfd8f2;
   --color-free-on-ink-soft: rgb(191 216 242 / 0.14);
   --shadow-color: rgb(86 104 143 / 0.35);
-  --color-member-1: #5b6fd0;
-  --color-member-2: #d9822b;
-  --color-member-3: #c0507f;
+  --color-avatar-1: #f6e4ea;
+  --color-avatar-1-ink: #6a3e55;
+  --color-avatar-2: #eef0e2;
+  --color-avatar-2-ink: #4a5236;
+  --color-avatar-3: #dce8f6;
+  --color-avatar-3-ink: #3f5070;
   --font-sans: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
   --font-serif: 'Shippori Mincho B1', 'Hiragino Mincho ProN', serif;
   --font-accent: 'Cormorant Garamond', 'Times New Roman', serif;
