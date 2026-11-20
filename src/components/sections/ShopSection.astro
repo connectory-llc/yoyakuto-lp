@@ -1,12 +1,14 @@
 ---
+import { pageName, STAFF } from '../../sampleSchedule';
 import SectionHeading from '../SectionHeading.astro';
 
-// 管理画面の予約一覧の見本
+// 管理画面の予約一覧の見本。予約が入った時間は、見本の予定で埋まっている時間に合わせる
+const [MIKA, YUTO, SAKI] = STAFF;
 const RESERVATIONS = [
-  { date: '11/22 土 11:00', page: 'サキの予約ページ', initial: 'サ', avatar: 3, customer: '山本 様' },
-  { date: '11/22 土 13:00', page: 'ミカの予約ページ', initial: 'ミ', avatar: 1, customer: '佐藤 様' },
-  { date: '11/22 土 15:30', page: 'ユウトの予約ページ', initial: 'ユ', avatar: 2, customer: '高橋 様' },
-  { date: '11/23 日 10:30', page: 'サキの予約ページ', initial: 'サ', avatar: 3, customer: '伊藤 様' },
+  { date: '11/21 土 10:00', staff: SAKI, customer: '山本 様' },
+  { date: '11/21 土 12:30', staff: MIKA, customer: '佐藤 様' },
+  { date: '11/21 土 15:00', staff: YUTO, customer: '高橋 様' },
+  { date: '11/22 日 10:30', staff: SAKI, customer: '伊藤 様' },
 ];
 ---
 <section class="shop">
@@ -41,11 +43,11 @@ const RESERVATIONS = [
                     <span
                       class="avatar"
                       aria-hidden="true"
-                      style={`background: var(--color-avatar-${reservation.avatar}); color: var(--color-avatar-${reservation.avatar}-ink)`}
+                      style={`background: var(--color-avatar-${reservation.staff.avatar}); color: var(--color-avatar-${reservation.staff.avatar}-ink)`}
                     >
-                      {reservation.initial}
+                      {reservation.staff.initial}
                     </span>
-                    {reservation.page}
+                    {pageName(reservation.staff)}
                   </span>
                 </td>
                 <td>{reservation.customer}</td>

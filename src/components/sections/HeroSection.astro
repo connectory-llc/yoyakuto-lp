@@ -1,31 +1,8 @@
 ---
+import { freeSlotsOf, NOMINATED, pageName, SAMPLE_DATE_LABEL, SLOT_COUNT, slotLabel, STAFF } from '../../sampleSchedule';
 import CtaButtons from '../CtaButtons.astro';
 
-const DAY_START_HOUR = 10;
-const SLOT_MINUTES = 30;
-const SLOT_COUNT = 18;
-const MINUTES_PER_HOUR = 60;
-const TWO_DIGITS = 2;
-
-// 見本の予定。start と end は 10:00 から数えた 30 分枠の位置で、end の枠は含まない
-const STAFF = [
-  { name: 'ミカ', initial: 'ミ', tint: 'var(--color-avatar-1)', ink: 'var(--color-avatar-1-ink)', busy: [{ start: 0, end: 3 }, { start: 5, end: 9 }, { start: 12, end: 14 }, { start: 15, end: 18 }] },
-  { name: 'ユウト', initial: 'ユ', tint: 'var(--color-avatar-2)', ink: 'var(--color-avatar-2-ink)', busy: [{ start: 1, end: 4 }, { start: 6, end: 8 }, { start: 10, end: 13 }, { start: 14, end: 17 }] },
-  { name: 'サキ', initial: 'サ', tint: 'var(--color-avatar-3)', ink: 'var(--color-avatar-3-ink)', busy: [{ start: 0, end: 2 }, { start: 3, end: 6 }, { start: 8, end: 11 }, { start: 13, end: 15 }, { start: 16, end: 18 }] },
-];
-const NOMINATED_INDEX = 2;
-
-const slotLabel = (slot: number) => {
-  const minutes = DAY_START_HOUR * MINUTES_PER_HOUR + slot * SLOT_MINUTES;
-  const hour = Math.floor(minutes / MINUTES_PER_HOUR);
-  const minute = String(minutes % MINUTES_PER_HOUR).padStart(TWO_DIGITS, '0');
-  return `${hour}:${minute}`;
-};
-
-const nominated = STAFF[NOMINATED_INDEX];
-const nominatedFreeSlots = Array.from({ length: SLOT_COUNT }, (_, slot) => slot).filter(
-  (slot) => !nominated.busy.some((range) => range.start <= slot && slot < range.end),
-);
+const nominatedFreeSlots = freeSlotsOf(NOMINATED);
 const gridColumn = (start: number, end: number) => `${start + 1} / ${end + 1}`;
 ---
 <section class="hero" aria-labelledby="hero-title">
@@ -46,20 +23,20 @@ const gridColumn = (start: number, end: number) => `${start + 1} / ${end + 1}`;
       <div class="card" aria-hidden="true">
         <p class="card-head">
           <span class="card-title">スタッフの予定</span>
-          <span class="card-date" lang="en">Sat. 22 Nov</span>
+          <span class="card-date" lang="en">{SAMPLE_DATE_LABEL}</span>
         </p>
         <div class="rows">
-          {STAFF.map((staff, index) => (
-            <div class:list={['row', { nominated: index === NOMINATED_INDEX }]}>
+          {STAFF.map((staff) => (
+            <div class:list={['row', { nominated: staff === NOMINATED }]}>
               <span class="name">
-                <span class="avatar" style={`background: ${staff.tint}; color: ${staff.ink}`}>{staff.initial}</span>
+                <span class="avatar" style={`background: var(--color-avatar-${staff.avatar}); color: var(--color-avatar-${staff.avatar}-ink)`}>{staff.initial}</span>
                 {staff.name}
               </span>
               <span class="track" style={`--slots: ${SLOT_COUNT}`}>
                 {staff.busy.map((range) => (
                   <span class="block" style={`grid-column: ${gridColumn(range.start, range.end)}`}></span>
                 ))}
-                {index === NOMINATED_INDEX &&
+                {staff === NOMINATED &&
                   nominatedFreeSlots.map((slot) => (
                     <span class="free" style={`grid-column: ${gridColumn(slot, slot + 1)}`}></span>
                   ))}
@@ -67,13 +44,13 @@ const gridColumn = (start: number, end: number) => `${start + 1} / ${end + 1}`;
             </div>
           ))}
         </div>
-        <p class="page-label">{nominated.name}さんの予約ページ</p>
+        <p class="page-label">{pageName(NOMINATED)}</p>
         <ul class="chips">
           {nominatedFreeSlots.map((slot) => <li>{slotLabel(slot)}</li>)}
         </ul>
       </div>
       <figcaption>
-        予約ページに並ぶのは、指名されたスタッフの予定が空いている時間だけです。この見本では{nominated.name}さんの {nominatedFreeSlots.length} 枠が並びます。
+        予約ページに並ぶのは、指名されたスタッフの予定が空いている時間だけです。この見本では{NOMINATED.name}さんの {nominatedFreeSlots.length} 枠が並びます。
       </figcaption>
     </figure>
   </div>

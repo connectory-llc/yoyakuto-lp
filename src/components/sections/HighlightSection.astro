@@ -1,4 +1,5 @@
 ---
+import { freeSlotsOf, NOMINATED, pageName, SAMPLE_DATE_LABEL, slotLabel } from '../../sampleSchedule';
 import SectionHeading from '../SectionHeading.astro';
 
 // 見本の DM。from が customer ならお客様、staff ならスタッフの発言
@@ -8,8 +9,10 @@ const MESSAGES = [
   { from: 'customer', text: '15 時は難しくて… 16 時以降はどうですか？', meta: 'お客様　12:52' },
   { from: 'staff', text: '16 時は埋まってしまっていて…', meta: 'スタッフ　18:30' },
 ];
-const PAGE_SLOTS = ['13:00', '13:30', '16:00', '17:30'];
-const PICKED_SLOT = '16:00';
+const FREE_SLOTS = freeSlotsOf(NOMINATED);
+// DM の見本でお客様が「16 時以降」を希望しているので、16:00 以降で最初に空いている枠を選んだことにする
+const DESIRED_FROM_SLOT = 12;
+const PICKED_SLOT = FREE_SLOTS.find((slot) => slot >= DESIRED_FROM_SLOT);
 const AFTER = ['お客様が指名したいスタッフの予約ページを開く', '空いている枠を選んで予約する', '予約が店の管理画面とカレンダーに入る'];
 ---
 <section class="highlight">
@@ -38,12 +41,12 @@ const AFTER = ['お客様が指名したいスタッフの予約ページを開�
         <p class="column-title">Yoyakuto なら　スタッフの予約ページで受ける</p>
         <div class="page" aria-hidden="true">
           <p class="page-head">
-            <span class="avatar">サ</span>
-            <span class="page-name">サキさんの予約ページ</span>
-            <span class="page-date" lang="en">Sat. 22 Nov</span>
+            <span class="avatar">{NOMINATED.initial}</span>
+            <span class="page-name">{pageName(NOMINATED)}</span>
+            <span class="page-date" lang="en">{SAMPLE_DATE_LABEL}</span>
           </p>
           <ul class="slots">
-            {PAGE_SLOTS.map((slot) => <li class:list={{ picked: slot === PICKED_SLOT }}>{slot}</li>)}
+            {FREE_SLOTS.map((slot) => <li class:list={{ picked: slot === PICKED_SLOT }}>{slotLabel(slot)}</li>)}
           </ul>
         </div>
         <ol class="steps">
