@@ -22,6 +22,7 @@
   --font-accent: 'Cormorant Garamond', 'Times New Roman', serif;
   --content-width: 1080px;
   --header-height: 72px;
+  --anchor-offset: 64px;
 }
 
 *,
@@ -32,7 +33,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: var(--header-height);
+  scroll-padding-top: calc(var(--header-height) + var(--anchor-offset));
 }
 
 @media (prefers-reduced-motion: reduce) {
