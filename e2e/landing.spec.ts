@@ -22,6 +22,9 @@ const SECTION_HEADINGS = [
   'よくある質問',
 ];
 const MINUTES_PER_HOUR = 60;
+// 句の途中で折り返さないことを確かめる幅。スマホ幅より広い範囲から、ブレークポイントの前後を選ぶ
+const PHRASE_KEEP_WIDTHS = [500, 560, 768, 961, 1024, 1440];
+const VIEWPORT_HEIGHT = 900;
 
 test.describe('トップページ', () => {
   test.beforeEach(async ({ page }) => {
@@ -56,6 +59,16 @@ test.describe('トップページ', () => {
     expect(minutes.length).toBe(SECTION_HEADINGS.length + 1);
     expect(minutes).toEqual([...minutes].sort((a, b) => a - b));
     expect(new Set(minutes).size).toBe(minutes.length);
+  });
+
+  test('タブレットからデスクトップの幅では、キャッチコピーの句が途中で折り返さない', async ({ page }) => {
+    for (const width of PHRASE_KEEP_WIDTHS) {
+      await page.setViewportSize({ width, height: VIEWPORT_HEIGHT });
+      const lines = await page.locator('h1 span').evaluateAll((spans) =>
+        spans.map((span) => Math.round(span.getBoundingClientRect().height / parseFloat(getComputedStyle(span).lineHeight))),
+      );
+      expect(lines, `${width}px`).toEqual([1, 1]);
+    }
   });
 
   test('「無料で始める」はすべてアプリの登録画面へ遷移する', async ({ page }) => {

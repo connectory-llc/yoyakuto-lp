@@ -237,7 +237,7 @@ const gridColumn = (start: number, end: number) => `${start + 1} / ${end + 1}`;
       gap: 48px;
     }
     h1 {
-      font-size: 40px;
+      font-size: max(26px, min(40px, calc((100vw - 32px) / 13)));
     }
     .lead-row {
       gap: 20px;
@@ -250,9 +250,6 @@ const gridColumn = (start: number, end: number) => `${start + 1} / ${end + 1}`;
     }
   }
   @media (max-width: 480px) {
-    h1 {
-      font-size: 28px;
-    }
     .lead-row {
       display: block;
     }
