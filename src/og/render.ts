@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import satori from 'satori';
 import sharp from 'sharp';
-import { OG_IMAGE_HEIGHT, OG_IMAGE_WIDTH } from '../consts';
+import { OG_IMAGE_HEIGHT, OG_IMAGE_WIDTH, SITE_NAME } from '../consts';
 
 export interface OgContent {
   tagline: string;
@@ -20,7 +20,6 @@ const FONT_ACCENT = 'Cormorant Garamond';
 const FONT_SANS_WEIGHT = 500;
 const FONT_SERIF_WEIGHT = 600;
 const FONT_ACCENT_WEIGHT = 500;
-const SITE_NAME_TEXT = 'Yoyakuto';
 
 const COLOR_BACKGROUND = '#F4F8FD';
 const COLOR_SURFACE = '#FFFFFF';
@@ -55,7 +54,7 @@ const CHIP_PADDING_Y = 4;
 const CHIP_RADIUS = 999;
 const CHIP_GAP = 10;
 
-const GOOGLE_FONTS_CSS_URL = 'https://fonts.googleapis.com/css2';
+const FONT_CSS_URL = 'https://fonts.googleapis.com/css2';
 const FONT_SOURCE_PATTERN = /src: url\((.+?)\) format\('(?:opentype|truetype)'\)/;
 const FONT_FETCH_TIMEOUT_MS = 15000;
 
@@ -69,9 +68,9 @@ async function fetchOk(url: string, what: string) {
 
 // 明朝体を丸ごとリポジトリに置くと 15MB になるため、画像に使う文字だけをビルド時に Google Fonts から取る
 const fontCache = new Map<string, Promise<ArrayBuffer>>();
-function loadGoogleFont(family: string, axis: string, text: string) {
+function fetchFontSubset(family: string, axis: string, text: string) {
   const params = new URLSearchParams({ family: `${family}:${axis}`, text: [...new Set(text)].join('') });
-  const url = `${GOOGLE_FONTS_CSS_URL}?${params}`;
+  const url = `${FONT_CSS_URL}?${params}`;
   const cached = fontCache.get(url);
   if (cached) return cached;
   const font = (async () => {
@@ -127,7 +126,7 @@ function layout(content: OgContent, logoDataUri: string) {
       box({ alignItems: 'center', justifyContent: 'space-between' }, [
         box({ alignItems: 'center', gap: LOGO_GAP, fontSize: SITE_NAME_FONT_SIZE }, [
           { type: 'img', props: { src: logoDataUri, width: LOGO_SIZE, height: LOGO_SIZE } },
-          box({}, SITE_NAME_TEXT),
+          box({}, SITE_NAME),
         ]),
         box({ fontSize: LABEL_FONT_SIZE, color: COLOR_SUB }, content.label),
       ]),
@@ -166,9 +165,9 @@ function layout(content: OgContent, logoDataUri: string) {
 
 export async function renderOgImage(content: OgContent): Promise<Uint8Array<ArrayBuffer>> {
   const [sans, serif, accent, logoDataUri] = await Promise.all([
-    loadGoogleFont(FONT_SANS, `wght@${FONT_SANS_WEIGHT}`, SITE_NAME_TEXT + content.label + content.pageName),
-    loadGoogleFont(FONT_SERIF, `wght@${FONT_SERIF_WEIGHT}`, content.headingLines.join('')),
-    loadGoogleFont(FONT_ACCENT, `ital,wght@1,${FONT_ACCENT_WEIGHT}`, content.tagline + content.dateLabel + content.slots.join('')),
+    fetchFontSubset(FONT_SANS, `wght@${FONT_SANS_WEIGHT}`, SITE_NAME + content.label + content.pageName),
+    fetchFontSubset(FONT_SERIF, `wght@${FONT_SERIF_WEIGHT}`, content.headingLines.join('')),
+    fetchFontSubset(FONT_ACCENT, `ital,wght@1,${FONT_ACCENT_WEIGHT}`, content.tagline + content.dateLabel + content.slots.join('')),
     loadLogoDataUri(),
   ]);
   const svg = await satori(layout(content, logoDataUri) as Parameters<typeof satori>[0], {
