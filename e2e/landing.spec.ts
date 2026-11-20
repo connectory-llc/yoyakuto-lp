@@ -13,7 +13,15 @@ function horizontalOverflow(page: Page) {
   return page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 }
 
-const SECTION_HEADINGS = ['主な機能', '使い始めるまで 3 ステップ', '料金', 'よくある質問'];
+const SECTION_HEADINGS = [
+  '予約の受付を DM から外す',
+  'スタッフ全員の予約を 店の一覧で見る',
+  '主な機能',
+  '使い始めるまで 3 ステップ',
+  '料金',
+  'よくある質問',
+];
+const MINUTES_PER_HOUR = 60;
 
 test.describe('トップページ', () => {
   test.beforeEach(async ({ page }) => {
@@ -37,6 +45,17 @@ test.describe('トップページ', () => {
     for (const heading of SECTION_HEADINGS) {
       await expect(page.getByRole('heading', { level: 2, name: heading, exact: true })).toBeVisible();
     }
+  });
+
+  test('各セクションの見出しの時刻は、上から順に 1 日の予定のように進む', async ({ page }) => {
+    const labels = await page.locator('.section-heading .time').allTextContents();
+    const minutes = labels.map((label) => {
+      const [hour, minute] = label.trim().split(':').map(Number);
+      return hour * MINUTES_PER_HOUR + minute;
+    });
+    expect(minutes.length).toBe(SECTION_HEADINGS.length + 1);
+    expect(minutes).toEqual([...minutes].sort((a, b) => a - b));
+    expect(new Set(minutes).size).toBe(minutes.length);
   });
 
   test('「無料で始める」はすべてアプリの登録画面へ遷移する', async ({ page }) => {
