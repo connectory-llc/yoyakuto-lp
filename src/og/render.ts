@@ -13,6 +13,7 @@ const COLOR_TEXT = '#1E2733';
 const COLOR_SUB = '#5E6873';
 const COLOR_FREE = '#56688F';
 const COLOR_FREE_SOFT = '#E6F0FA';
+const COLOR_ACCENT = '#2E3B57';
 const COLOR_SURFACE = '#FFFFFF';
 const GRID_ROW = 48;
 const GRID_COLUMN = 96;
@@ -65,7 +66,7 @@ function layout(label: string, headingLines: string[], slots: string[]) {
       backgroundSize: `${GRID_COLUMN}px ${GRID_ROW}px`,
     },
     [
-      box({ width: ACCENT_BAR_WIDTH, height: '100%', background: COLOR_FREE }),
+      box({ width: ACCENT_BAR_WIDTH, height: '100%', background: COLOR_ACCENT }),
       box(
         {
           flexDirection: 'column',

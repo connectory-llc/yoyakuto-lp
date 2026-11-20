@@ -55,11 +55,11 @@ body {
 }
 
 a {
-  color: var(--color-free);
+  color: var(--color-accent);
 }
 
 a:hover {
-  color: var(--color-free-hover);
+  color: var(--color-text-sub);
 }
 
 :where(h1, h2, h3, p, li, figcaption) {
