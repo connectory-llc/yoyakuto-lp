@@ -5,12 +5,11 @@ interface Props {
   eyebrow: string;
   title: string;
   lead?: string;
-  tone?: 'default' | 'ink';
 }
 
-const { id, time, eyebrow, title, lead, tone = 'default' } = Astro.props;
+const { id, time, eyebrow, title, lead } = Astro.props;
 ---
-<div class:list={['section-heading', tone]}>
+<div class="section-heading">
   <p class="label">
     <span class="time">{time}</span>
     <span class="eyebrow">{eyebrow}</span>
@@ -58,13 +57,6 @@ const { id, time, eyebrow, title, lead, tone = 'default' } = Astro.props;
     font-size: 15px;
     line-height: 2.1;
     color: var(--color-text-sub);
-  }
-  .ink .label,
-  .ink .lead {
-    color: var(--color-ink-sub);
-  }
-  .ink .time {
-    color: var(--color-free-on-ink);
   }
   @media (max-width: 760px) {
     h2 {

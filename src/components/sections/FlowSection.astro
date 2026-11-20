@@ -61,7 +61,7 @@ const STEPS = [
     left: 20px;
     right: calc(100% / 3);
     height: 2px;
-    background: repeating-linear-gradient(90deg, var(--color-free) 0 6px, transparent 6px 12px);
+    background: repeating-linear-gradient(90deg, var(--color-border) 0 6px, transparent 6px 12px);
   }
   .step {
     position: relative;
@@ -73,17 +73,18 @@ const STEPS = [
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--color-free);
-    color: #ffffff;
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 16px;
+    background: var(--color-surface);
+    color: var(--color-free);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 22px;
     box-shadow: 0 0 0 6px var(--color-bg);
   }
   h3 {
     margin: 20px 0 8px;
-    font-weight: 700;
-    font-size: 18px;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 19px;
   }
   p {
     margin: 0;
@@ -107,7 +108,7 @@ const STEPS = [
       right: auto;
       width: 2px;
       height: auto;
-      background: repeating-linear-gradient(180deg, var(--color-free) 0 6px, transparent 6px 12px);
+      background: repeating-linear-gradient(180deg, var(--color-border) 0 6px, transparent 6px 12px);
     }
     .step {
       padding-left: 60px;

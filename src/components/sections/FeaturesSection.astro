@@ -1,35 +1,29 @@
 ---
 import SectionHeading from '../SectionHeading.astro';
 
-// アイコンは 24px 四方の線画。path の d だけを持たせ、線の太さや色は CSS でそろえる
+const NUMBER_DIGITS = 2;
 const FEATURES = [
   {
-    icon: 'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20a6 6 0 0 1 12 0M16 11a3 3 0 1 0 0-6M18 20a6 6 0 0 0-3-5.2',
     title: 'スタッフごとに予約ページを作る',
     body: 'スタッフを招待し、一人ずつ予約ページを作れます。ページの URL を SNS のプロフィールや店のサイトに載せれば、お客様は指名したいスタッフのページから予約できます。',
   },
   {
-    icon: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
     title: 'スタッフの空き時間だけを枠にする',
     body: 'スタッフの Google カレンダーを読み取り、予定が入っていない時間だけを予約枠として表示します。休みや私用の予定を入れれば、その時間は予約ページに出ません。',
   },
   {
-    icon: 'M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1',
     title: '店の予約をまとめて管理する',
     body: '予約ページから入った予約は、どのスタッフのページから入ったかとあわせて管理画面の一覧に並びます。予約を把握するために、スタッフに一件ずつ確かめる必要はありません。',
   },
   {
-    icon: 'M3 6h18v12H3zM3 7l9 6 9-6',
     title: 'お客様はアカウントなしで予約できる',
     body: 'お客様は名前とメールアドレスを入れ、届いたメールのリンクを開けば予約が確定します。キャンセルも確定後に届くメールから手続きできます。',
   },
   {
-    icon: 'M6 3h12v18H6zM9 8h6M9 12h6M9 16h3',
     title: '予約時に聞きたいことを聞く',
     body: 'ご要望や連絡先など、予約時に聞きたい項目を追加できます。テキスト、電話番号、選択肢、チェックボックスなどに対応し、回答は予約の内容と一緒に確認できます。',
   },
   {
-    icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2',
     title: '受付時間と枠の長さを決める',
     body: '受付を始める時刻と終える時刻、1 枠の長さを予約ページごとに設定できます。予約を受けたくない時間帯も除外できます。',
   },
@@ -45,11 +39,9 @@ const FEATURES = [
       lead="スタッフの予約ページづくりから、予約の受付、店での管理まで。指名の予約を受けるのに必要なことを一つにまとめています。"
     />
     <ul class="cards">
-      {FEATURES.map((feature) => (
+      {FEATURES.map((feature, index) => (
         <li class="card">
-          <span class="icon" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24"><path d={feature.icon}></path></svg>
-          </span>
+          <span class="number" aria-hidden="true">{String(index + 1).padStart(NUMBER_DIGITS, '0')}</span>
           <h3>{feature.title}</h3>
           <p>{feature.body}</p>
         </li>
@@ -72,34 +64,25 @@ const FEATURES = [
     list-style: none;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+    gap: 20px;
   }
   .card {
-    padding: 28px 26px 30px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+    padding: 30px 28px 32px;
+    border-radius: 24px;
     background: var(--color-surface);
   }
-  .icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: var(--color-free-soft);
-  }
-  .icon svg {
-    fill: none;
-    stroke: var(--color-free);
-    stroke-width: 1.6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+  .number {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 40px;
+    line-height: 1;
+    color: var(--color-free);
   }
   h3 {
-    margin: 20px 0 10px;
-    font-weight: 700;
-    font-size: 17px;
+    margin: 18px 0 10px;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 18px;
     line-height: 1.6;
   }
   p {
