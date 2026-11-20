@@ -21,6 +21,16 @@ test.describe('検索エンジンと SNS 向けの情報', () => {
     await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute('content', 'Yoyakuto');
   });
 
+  test('SVG に対応しないブラウザやホーム画面向けにもアイコンを出す', async ({ page, request }) => {
+    await page.goto('/');
+    await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', '/favicon.svg');
+    await expect(page.locator('link[rel="icon"][sizes="any"]')).toHaveAttribute('href', '/favicon.ico');
+    await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute('href', '/apple-touch-icon.png');
+    for (const path of ['/favicon.svg', '/favicon.ico', '/apple-touch-icon.png']) {
+      expect((await request.get(path)).status()).toBe(HTTP_OK);
+    }
+  });
+
   test('OGP 画像を PNG として配信する', async ({ request }) => {
     const response = await request.get('/og/index.png');
     expect(response.status()).toBe(HTTP_OK);
