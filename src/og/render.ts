@@ -57,20 +57,35 @@ const CHIP_GAP = 10;
 
 const GOOGLE_FONTS_CSS_URL = 'https://fonts.googleapis.com/css2';
 const FONT_SOURCE_PATTERN = /src: url\((.+?)\) format\('(?:opentype|truetype)'\)/;
+const FONT_FETCH_TIMEOUT_MS = 15000;
+
+async function fetchOk(url: string, what: string) {
+  const response = await fetch(url, { signal: AbortSignal.timeout(FONT_FETCH_TIMEOUT_MS) });
+  if (!response.ok) {
+    throw new Error(`OGP 画像に使う${what}を取得できませんでした（${response.status}）: ${(await response.text()).slice(0, 200)}`);
+  }
+  return response;
+}
 
 // 明朝体を丸ごとリポジトリに置くと 15MB になるため、画像に使う文字だけをビルド時に Google Fonts から取る
-async function loadGoogleFont(family: string, axis: string, text: string) {
+const fontCache = new Map<string, Promise<ArrayBuffer>>();
+function loadGoogleFont(family: string, axis: string, text: string) {
   const params = new URLSearchParams({ family: `${family}:${axis}`, text: [...new Set(text)].join('') });
-  const css = await (await fetch(`${GOOGLE_FONTS_CSS_URL}?${params}`)).text();
-  const source = css.match(FONT_SOURCE_PATTERN)?.[1];
-  if (!source) {
-    throw new Error(`OGP 画像に使うフォント ${family} を Google Fonts から取得できませんでした`);
-  }
-  const response = await fetch(source);
-  if (!response.ok) {
-    throw new Error(`OGP 画像に使うフォント ${family} のファイルを取得できませんでした（${response.status}）`);
-  }
-  return response.arrayBuffer();
+  const url = `${GOOGLE_FONTS_CSS_URL}?${params}`;
+  const cached = fontCache.get(url);
+  if (cached) return cached;
+  const font = (async () => {
+    const css = await (await fetchOk(url, `フォント ${family} の CSS`)).text();
+    const source = css.match(FONT_SOURCE_PATTERN)?.[1];
+    if (!source) {
+      throw new Error(`OGP 画像に使うフォント ${family} の CSS に、TrueType のファイルが見つかりませんでした`);
+    }
+    return (await fetchOk(source, `フォント ${family} のファイル`)).arrayBuffer();
+  })();
+  fontCache.set(url, font);
+  // 失敗した取得を使い回すと、開発サーバーで一度失敗したあと二度と取り直さなくなる
+  font.catch(() => fontCache.delete(url));
+  return font;
 }
 
 // カレントディレクトリ基準にするのは、ビルド後の import.meta.url が位置を保たないため
