@@ -1,18 +1,26 @@
 ---
-import { freeSlotsOf, NOMINATED, pageName, SAMPLE_DATE_LABEL, slotLabel } from '../../sampleSchedule';
+import { freeSlotsOf, NOMINATED, pageName, sampleDateLabel, slotAt, slotLabel } from '../../sampleSchedule';
 import SectionHeading from '../SectionHeading.astro';
 
-// 見本の DM。from が customer ならお客様、staff ならスタッフの発言
+// 見本の DM。from が customer ならお客様、staff ならスタッフの発言。スタッフが空いていると答える時刻は、見本の予定の空き枠に合わせる
+const FREE_SLOTS = freeSlotsOf(NOMINATED);
+const DESIRED_FROM_HOUR = 16;
+const DESIRED_FROM_SLOT = slotAt(DESIRED_FROM_HOUR);
+const PICKED_SLOT = FREE_SLOTS.find((slot) => slot >= DESIRED_FROM_SLOT);
+if (PICKED_SLOT === undefined) {
+  throw new Error(`見本の予定で ${DESIRED_FROM_HOUR} 時以降に空いている枠がないため、DM との違いの図を描けません`);
+}
+const AFTERNOON_START_HOUR = 13;
+const OFFERED_SLOT = FREE_SLOTS.find((slot) => slot >= slotAt(AFTERNOON_START_HOUR) && slot < DESIRED_FROM_SLOT);
+if (OFFERED_SLOT === undefined) {
+  throw new Error(`見本の予定で ${AFTERNOON_START_HOUR} 時から ${DESIRED_FROM_HOUR} 時の間に空いている枠がないため、DM との違いの図を描けません`);
+}
 const MESSAGES = [
   { from: 'customer', text: '来週の土曜の午後って空いてますか？', meta: 'お客様　23:48' },
-  { from: 'staff', text: '15 時なら空いてます', meta: 'スタッフ　翌日 12:10' },
-  { from: 'customer', text: '15 時は難しくて… 16 時以降はどうですか？', meta: 'お客様　12:52' },
-  { from: 'staff', text: '16 時は埋まってしまっていて…', meta: 'スタッフ　18:30' },
+  { from: 'staff', text: `${slotLabel(OFFERED_SLOT)} なら空いてます`, meta: 'スタッフ　翌日 12:10' },
+  { from: 'customer', text: `その時間は難しくて… ${DESIRED_FROM_HOUR} 時以降はどうですか？`, meta: 'お客様　12:52' },
+  { from: 'staff', text: '確認して、また連絡しますね', meta: 'スタッフ　18:30' },
 ];
-const FREE_SLOTS = freeSlotsOf(NOMINATED);
-// DM の見本でお客様が「16 時以降」を希望しているので、16:00 以降で最初に空いている枠を選んだことにする
-const DESIRED_FROM_SLOT = 12;
-const PICKED_SLOT = FREE_SLOTS.find((slot) => slot >= DESIRED_FROM_SLOT);
 const AFTER = ['お客様が指名したいスタッフの予約ページを開く', '空いている枠を選んで予約する', '予約が店の管理画面とカレンダーに入る'];
 ---
 <section class="highlight">
@@ -41,9 +49,9 @@ const AFTER = ['お客様が指名したいスタッフの予約ページを開�
         <p class="column-title">Yoyakuto なら　スタッフの予約ページで受ける</p>
         <div class="page" aria-hidden="true">
           <p class="page-head">
-            <span class="avatar">{NOMINATED.initial}</span>
+            <span class="avatar" style={`background: var(--color-avatar-${NOMINATED.avatar}); color: var(--color-avatar-${NOMINATED.avatar}-ink)`}>{NOMINATED.initial}</span>
             <span class="page-name">{pageName(NOMINATED)}</span>
-            <span class="page-date" lang="en">{SAMPLE_DATE_LABEL}</span>
+            <span class="page-date" lang="en">{sampleDateLabel()}</span>
           </p>
           <ul class="slots">
             {FREE_SLOTS.map((slot) => <li class:list={{ picked: slot === PICKED_SLOT }}>{slotLabel(slot)}</li>)}
@@ -155,8 +163,6 @@ const AFTER = ['お客様が指名したいスタッフの予約ページを開�
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-avatar-3);
-    color: var(--color-avatar-3-ink);
     font-size: 13px;
   }
   .page-name {

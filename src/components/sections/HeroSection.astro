@@ -1,5 +1,5 @@
 ---
-import { freeSlotsOf, NOMINATED, pageName, SAMPLE_DATE_LABEL, SLOT_COUNT, slotLabel, STAFF } from '../../sampleSchedule';
+import { freeSlotsOf, NOMINATED, pageName, sampleDateLabel, SLOT_COUNT, slotLabel, STAFF } from '../../sampleSchedule';
 import CtaButtons from '../CtaButtons.astro';
 
 const nominatedFreeSlots = freeSlotsOf(NOMINATED);
@@ -23,7 +23,7 @@ const gridColumn = (start: number, end: number) => `${start + 1} / ${end + 1}`;
       <div class="card" aria-hidden="true">
         <p class="card-head">
           <span class="card-title">スタッフの予定</span>
-          <span class="card-date" lang="en">{SAMPLE_DATE_LABEL}</span>
+          <span class="card-date" lang="en">{sampleDateLabel()}</span>
         </p>
         <div class="rows">
           {STAFF.map((staff) => (

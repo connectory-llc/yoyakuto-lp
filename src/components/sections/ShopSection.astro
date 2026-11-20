@@ -1,16 +1,19 @@
 ---
-import { pageName, STAFF } from '../../sampleSchedule';
+import { pageName, sampleDateLabelJa, slotLabel, STAFF } from '../../sampleSchedule';
 import SectionHeading from '../SectionHeading.astro';
 
-// 管理画面の予約一覧の見本。予約が入った時間は、見本の予定で埋まっている時間に合わせる
+// 管理画面の予約一覧の見本。予約の時刻は、見本の予定で埋まっている枠の始まりから取る
 const [MIKA, YUTO, SAKI] = STAFF;
+const NEXT_DAY = 1;
 const RESERVATIONS = [
-  { date: '11/21 土 10:00', staff: SAKI, customer: '山本 様' },
-  { date: '11/21 土 12:30', staff: MIKA, customer: '佐藤 様' },
-  { date: '11/21 土 15:00', staff: YUTO, customer: '高橋 様' },
-  { date: '11/22 日 10:30', staff: SAKI, customer: '伊藤 様' },
-];
----
+  { day: 0, staff: SAKI, busyIndex: 0, customer: '山本 様' },
+  { day: 0, staff: MIKA, busyIndex: 1, customer: '佐藤 様' },
+  { day: 0, staff: YUTO, busyIndex: 2, customer: '高橋 様' },
+  { day: NEXT_DAY, staff: SAKI, busyIndex: 1, customer: '伊藤 様' },
+].map((reservation) => ({
+  ...reservation,
+  date: `${sampleDateLabelJa(reservation.day)} ${slotLabel(reservation.staff.busy[reservation.busyIndex].start)}`,
+}));---
 <section class="shop">
   <div class="inner">
     <SectionHeading
