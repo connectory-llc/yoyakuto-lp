@@ -1,6 +1,6 @@
 # yoyakuto-lp
 
-日程調整サービス Yoyakuto（ヨヤクト）の LP。Astro の静的ビルドで作っている。
+担当を指名して予約できる予約受付サービス Yoyakuto（ヨヤクト）の LP。Astro の静的ビルドで作っている。
 
 ## 開発
 
